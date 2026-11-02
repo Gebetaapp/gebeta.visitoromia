@@ -1,6 +1,6 @@
 # Gebeta and Visit Oromia: partnership demo
 
-A clickable demo for Visit Oromia's non-technical team: their own map on Gebeta Maps, with
+A clickable demo for Visit Oromia's team: their own map on Gebeta Maps, with
 photos, place details and site maps; a field team adding a new place; and the dashboard
 Visit Oromia gets. Visitor figures (views, directions, calls, saves) are sample data.
 
