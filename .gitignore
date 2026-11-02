@@ -1,0 +1,6 @@
+# The Gebeta API key stays out of the repo. Copy config.example.js to config.js locally,
+# and create config.js on the server with a key locked to the demo's domain.
+config.js
+
+# Build output from build-single.js
+dist/

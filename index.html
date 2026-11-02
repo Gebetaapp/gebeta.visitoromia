@@ -1,0 +1,273 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Visit Oromia Partnership Demo</title>
+<meta name="description" content="How the Gebeta and Visit Oromia partnership works: adding places, the map and the dashboard. Illustrative demo with sample data.">
+<link rel="icon" href="assets/gebeta-logo.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="vendor/maplibre-gl.css">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<header class="topbar">
+  <a class="brand" href="#tour" aria-label="Gebeta and Visit Oromia demo, back to the start">
+    <img src="assets/gebeta-logo.png" alt="" width="26" height="26">
+    <span class="brand-name">Gebeta</span>
+    <span class="brand-div" aria-hidden="true"></span>
+    <span class="brand-partner">Visit Oromia</span>
+  </a>
+  <nav class="steps" aria-label="Demo steps">
+    <button class="step step-play" type="button" data-step="1"><span class="step-n"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4.5v15l12-7.5z" fill="currentColor"/></svg></span>Play demo</button>
+    <button class="step" type="button" data-step="2"><span class="step-n">01</span>The map</button>
+    <button class="step" type="button" data-step="3"><span class="step-n">02</span>Add a place</button>
+    <button class="step" type="button" data-step="4"><span class="step-n">03</span>Dashboard</button>
+  </nav>
+  <div class="top-actions">
+    <span class="chip chip-cream top-chip">Demo · sample data</span>
+    <button class="icon-btn" id="prev" type="button" aria-label="Previous step"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M11 6l-6 6 6 6"/></svg></button>
+    <button class="icon-btn" id="next" type="button" aria-label="Next step"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
+  </div>
+</header>
+
+<main>
+
+  <!-- Play demo: what is in the demo, and a guided walk through it -->
+  <section class="screen" id="screen-tour" data-screen="1" aria-labelledby="tour-title">
+    <div class="wrap tour-wrap">
+      <div class="tour-hero">
+        <div class="eyebrow">Gebeta and Visit Oromia</div>
+        <h1 id="tour-title">See Oromia on Gebeta Maps.</h1>
+        <p class="lede">A 90-second guided demo of what Visit Oromia gets. Press play and it walks you through each part, then use the tabs at the top to try anything yourself.</p>
+        <div class="tour-actions">
+          <button class="btn btn-orange btn-lg" type="button" id="tour-play"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4.5v15l12-7.5z" fill="currentColor"/></svg>Play the demo</button>
+          <button class="btn btn-ghost btn-lg" type="button" data-go="2">Explore on my own</button>
+        </div>
+      </div>
+      <div class="sec-label tour-sec"><span>What is in the demo</span><span>Show me plays just that part</span></div>
+      <div class="feature-grid" id="feature-grid"></div>
+      <p class="note">Illustrative demo. Places come from Visit Oromia's own map; visitor figures and offers are sample data.</p>
+    </div>
+  </section>
+
+  <!-- The map and Add a place share one map -->
+  <section class="screen mapstage" id="screen-map" data-screen="2 3">
+    <aside class="panel panel-left" aria-label="Controls">
+
+      <div id="panel-add">
+        <div class="eyebrow">Visit Oromia field tool</div>
+        <h2>Add a place.</h2>
+        <p class="lede">Lake Langano is not on Visit Oromia's map yet. A field team adds it from the Gebeta Maps App or the dashboard, and Gebeta checks it before visitors see it.</p>
+
+        <form id="add-form" class="form" novalidate>
+          <div class="field">
+            <label for="f-name">Place name</label>
+            <input class="input" id="f-name" autocomplete="off" required>
+            <span class="field-error" id="f-name-error" hidden>Give the place a name.</span>
+          </div>
+          <div class="row2">
+            <div class="field">
+              <label for="f-kind">Category</label>
+              <select class="select" id="f-kind">
+                <option value="destination">Destination</option>
+                <option value="business">Tourism business</option>
+                <option value="service">Support service</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="f-type">Type</label>
+              <input class="input" id="f-type" autocomplete="off">
+            </div>
+          </div>
+          <div class="field">
+            <label for="f-zone">Zone</label>
+            <select class="select" id="f-zone"></select>
+          </div>
+          <div class="field">
+            <span class="label">Location</span>
+            <div class="pinbox">
+              <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s-7-6.5-7-12a7 7 0 0 1 14 0c0 5.5-7 12-7 12z"/><circle cx="12" cy="9" r="2.5"/></svg>
+              <span>Drag the pin or click the map.<b id="f-coords"></b></span>
+            </div>
+          </div>
+          <div class="field">
+            <label for="f-access">Access</label>
+            <textarea class="textarea" id="f-access" rows="2"></textarea>
+          </div>
+          <div class="field">
+            <span class="label" id="content-label">Content</span>
+            <div class="toggles" role="group" aria-labelledby="content-label">
+              <button type="button" class="tog" data-c="photos" aria-pressed="true">2 photos</button>
+              <button type="button" class="tog" data-c="tour" aria-pressed="false">360° tour</button>
+              <button type="button" class="tog" data-c="story" aria-pressed="false">Story</button>
+            </div>
+          </div>
+          <div class="switch" id="official-row">
+            <div><b id="official-label">Official Visit Oromia place</b><span>Shows the official badge to visitors.</span></div>
+            <button type="button" role="switch" id="f-official" aria-checked="true" aria-labelledby="official-label"></button>
+          </div>
+          <button class="btn btn-navy btn-block" type="submit">Submit for review</button>
+        </form>
+
+        <div id="add-status" hidden>
+          <ol class="timeline" id="timeline">
+            <li><span class="t-dot"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12 5 5L20 7"/></svg></span><div><b>Submitted</b><span>By a Visit Oromia field team, just now.</span></div></li>
+            <li><span class="t-dot"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12 5 5L20 7"/></svg></span><div><b>Checked by Gebeta</b><span>Location, access and details confirmed.</span></div></li>
+            <li><span class="t-dot"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12 5 5L20 7"/></svg></span><div><b>Live for visitors</b><span>In the Gebeta Maps App and on visitoromia.org.</span></div></li>
+          </ol>
+          <div class="progress-strip">
+            <div>
+              <div class="label-sm">Destinations on the map</div>
+              <div class="count"><span id="dest-count">138</span> <small>Year 1 target: 100</small></div>
+            </div>
+            <span class="chip chip-green" id="dest-delta" hidden>+1 today</span>
+          </div>
+          <div id="add-done" hidden>
+            <p class="linked" id="linked-text"></p>
+            <div class="btn-row">
+              <button class="btn btn-navy" type="button" data-go="4">See the dashboard
+                <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
+              <button class="btn btn-ghost" type="button" data-go="2">Back to the map</button>
+              <button class="btn btn-ghost" type="button" id="add-reset">Run it again</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div id="panel-year" hidden>
+        <div class="eyebrow">Visit Oromia on Gebeta Maps</div>
+        <h2>Oromia, place by place.</h2>
+        <p class="lede">Click any place to see its photos, details and, where there is one, its site map. Play the year to watch partners add more.</p>
+        <p class="vo-note" id="vo-note"></p>
+        <div class="month-head">
+          <div><b id="m-label">Month 7 of 12</b><span id="m-sub">Today in this demo</span></div>
+          <button class="btn btn-sm btn-ghost" type="button" id="play" aria-pressed="false"></button>
+        </div>
+        <input type="range" class="range" id="month" min="0" max="12" step="1" value="7" aria-label="Month of Year 1" aria-valuetext="Month 7 of 12">
+        <div class="ticks" aria-hidden="true"><span>Start</span><span>Month 6</span><span>Month 12</span></div>
+        <div class="sec-label"><span>On the map</span><span>Live · Year 1 target</span></div>
+        <ul class="layers" id="layers"></ul>
+        <div class="sec-label"><span>Event maps</span></div>
+        <ul class="events" id="events"></ul>
+      </div>
+    </aside>
+
+    <div class="map-wrap z-low" id="map-wrap">
+      <div id="map" role="region" aria-label="Map of Oromia with destinations, businesses and services"></div>
+      <div class="map-msgs">
+        <div class="map-hint" id="map-hint" hidden>Click the map or drag the pin to set the location.</div>
+        <div class="map-notice" id="map-notice" hidden></div>
+      </div>
+      <div class="map-legend" aria-hidden="true">
+        <span><i class="lg lg-pin"></i>Destination</span>
+        <span><i class="lg" style="background:#2A78D6"></i>Tourism business</span>
+        <span><i class="lg lg-deal"></i>Business with an offer</span>
+        <span><i class="lg" style="background:#1FA97A"></i>Support service</span>
+      </div>
+    </div>
+
+    <aside class="panel panel-right" aria-label="What visitors see">
+      <div class="preview-head">
+        <div class="eyebrow">What visitors see</div>
+        <div class="seg" role="tablist" aria-label="Where visitors see it" id="preview-mode">
+          <button type="button" role="tab" data-mode="app" aria-selected="true">Gebeta Maps App</button>
+          <button type="button" role="tab" data-mode="web" aria-selected="false">visitoromia.org</button>
+        </div>
+      </div>
+      <div id="preview" class="preview" aria-live="polite"></div>
+      <p class="note">Screens are illustrative.</p>
+    </aside>
+
+    <!-- Covers the controls and the map, and leaves the visitor's phone in view -->
+    <div class="site-overlay" id="site-overlay" role="dialog" aria-label="Site map" hidden></div>
+  </section>
+
+  <!-- Dashboard -->
+  <section class="screen" id="screen-dashboard" data-screen="4" aria-labelledby="dash-title">
+    <div class="wrap dash">
+      <div class="dash-head">
+        <div>
+          <div class="eyebrow">Visit Oromia dashboard</div>
+          <h1 id="dash-title">What visitors look for, place by place.</h1>
+        </div>
+        <span class="chip chip-grey">Year 1 · month 7 of 12</span>
+      </div>
+
+      <section class="card targets" aria-labelledby="t-title">
+        <div class="card-title"><h3 id="t-title">Year 1 targets</h3><span>All of Oromia · the dark mark shows where month 7 should be</span></div>
+        <div class="targets-grid" id="targets"></div>
+      </section>
+
+      <div class="filters" role="group" aria-label="Filters">
+        <div class="seg" id="f-period" role="tablist" aria-label="Period">
+          <button type="button" role="tab" data-period="30" aria-selected="true">Last 30 days</button>
+          <button type="button" role="tab" data-period="90" aria-selected="false">Last 90 days</button>
+          <button type="button" role="tab" data-period="ytd" aria-selected="false">Year to date</button>
+        </div>
+        <label class="zone-filter">
+          <span class="visually-hidden">Zone</span>
+          <select class="select" id="f-zone-filter"><option value="all">All zones</option></select>
+        </label>
+        <span class="filters-note">Everything below follows these filters.</span>
+      </div>
+
+      <div class="stats" id="stats"></div>
+
+      <div class="grid-2">
+        <section class="card" aria-labelledby="td-title">
+          <div class="card-title"><h3 id="td-title">Most viewed destinations</h3><span>Views · directions</span></div>
+          <div id="top-dest"></div>
+        </section>
+        <section class="card" aria-labelledby="tc-title">
+          <div class="card-title"><h3 id="tc-title">Calls to businesses</h3><span>Taps on Call · directions</span></div>
+          <div id="top-calls"></div>
+        </section>
+      </div>
+
+      <div class="grid-3">
+        <section class="card" aria-labelledby="tr-title">
+          <div class="card-title"><h3 id="tr-title">Place views by month</h3><button class="link" type="button" id="trend-toggle" aria-pressed="false">Show as table</button></div>
+          <div id="trend"></div>
+        </section>
+        <section class="card" aria-labelledby="zn-title">
+          <div class="card-title"><h3 id="zn-title">Activity by zone</h3><span id="zones-sub">Place views</span></div>
+          <div id="zones"></div>
+        </section>
+        <section class="card" aria-labelledby="rt-title">
+          <div class="card-title"><h3 id="rt-title">Popular routes</h3><span>Times started</span></div>
+          <div id="routes"></div>
+        </section>
+      </div>
+
+      <section class="card deals-card" aria-labelledby="dl-title">
+        <div class="card-title">
+          <div><h3 id="dl-title">Deals and offers</h3><span id="deals-sub"></span></div>
+          <button class="btn btn-sm btn-navy" type="button" data-demo="In the real dashboard this opens a short form to agree an offer with a partner business.">
+            <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>Add an offer</button>
+        </div>
+        <div id="deals"></div>
+      </section>
+
+      <p class="note">Illustrative demo. All figures are sample data, and place locations are approximate.</p>
+    </div>
+  </section>
+</main>
+
+<div class="tour-spot" id="tour-spot" hidden></div>
+<div class="tour-card" id="tour-card" role="dialog" aria-label="Guided demo" aria-live="polite" hidden></div>
+<div id="tooltip" role="tooltip"></div>
+<div id="toast" role="status" aria-live="polite"></div>
+
+<script src="config.js"></script>
+<script src="vendor/maplibre-gl.js"></script>
+<script src="vo-map.js"></script>
+<script src="sites.js"></script>
+<script src="data.js"></script>
+<script src="basemap.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
